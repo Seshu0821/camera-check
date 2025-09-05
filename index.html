@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Capture Frame Example</title>
+</head>
+<body>
+  <h2>Webcam Frame Capture</h2>
+
+  <!-- Webcam preview -->
+  <video id="video" width="320" height="240" autoplay></video>
+  <br>
+
+  <!-- Button to capture -->
+  <button id="captureBtn">Capture Frame</button>
+  <br><br>
+
+  <!-- Canvas to hold captured image -->
+  <canvas id="canvas" width="320" height="240" style="border:1px solid black;"></canvas>
+  <br>
+
+  <!-- Show image as <img> -->
+  <img id="capturedImage" alt="Captured frame will appear here"/>
+
+  <script>
+    // Get video element
+    const video = document.getElementById("video");
+
+    // Ask for webcam access
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream; // attach webcam stream to <video>
+      })
+      .catch(err => {
+        console.error("Error accessing webcam: ", err);
+      });
+
+    // Capture button
+    const captureBtn = document.getElementById("captureBtn");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const capturedImage = document.getElementById("capturedImage");
+
+    captureBtn.addEventListener("click", () => {
+      // Draw the current frame from <video> to <canvas>
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Convert canvas to Base64 image
+      const imageData = canvas.toDataURL("image/jpeg");
+
+      // Show the captured image
+      capturedImage.src = imageData;
+
+      console.log("Captured Base64 image:", imageData);
+    });
+  </script>
+</body>
+</html>
